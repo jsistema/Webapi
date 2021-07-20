@@ -84,9 +84,7 @@ namespace Api.Data.Repository
         public async Task<IEnumerable<T>> SelectAsync()
         {
            try {
-
                return await _dataset.ToListAsync();
-
            } catch (Exception ex) {
                throw ex;
            }
