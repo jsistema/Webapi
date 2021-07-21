@@ -13,7 +13,7 @@ namespace Api.Application.Controllers
     {
 
        [HttpGet]
-       public async Task<ActionResult> GetAll([FromServices] UserService service)
+       public async Task<ActionResult> GetAll([FromServices] IUserService service)
        {
            if (!ModelState.IsValid) 
            {

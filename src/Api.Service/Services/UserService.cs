@@ -7,7 +7,7 @@ using Api.Domain.Interfaces.Services.User;
 
 namespace Api.Service.Services
 {
-    public class UserService : IUserInterface
+    public class UserService : IUserService
     {
         
         private IRepository<UserEntity> _repository;
