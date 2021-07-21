@@ -6,6 +6,21 @@
     <ProjectReference Include="..\Api.CrossCutting\CrossCutting.csproj" />
   </ItemGroup>
 
+ <ItemGroup>
+ <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.5.1" />
+ 
+ <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.5.1" />
+
+   <PackageReference Include="Microsoft.Extensions.ApiDescription.Server" Version="3.1.17">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+  </PackageReference>
+   
+   <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.5.1" />
+   
+   <PackageReference Include="Swashbuckle.AspNetCore" Version="5.5.1" />
+ </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
