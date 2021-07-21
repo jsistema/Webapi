@@ -1,10 +1,12 @@
 using System;
 using Api.CrossCutting.DependencyInjection;
+using Api.Domain.Secuity;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 
 namespace application
@@ -24,6 +26,20 @@ namespace application
             // Configura injeção de dependência da camanda CrossCutting
             ConfigureService.ConfigureDependenciesService(services);
             ConfigureRepository.ConfigureDependenciesRepository(services);
+
+            //Configura injeção de dependencias para as classes JWT.
+            var sigingConfigurations = new SigningConfiguration();
+            services.AddSingleton(sigingConfigurations);
+
+            var tokenConfigurations = new TokenConfiguration();
+            new ConfigureFromConfigurationOptions<TokenConfiguration>
+                (
+                 Configuration.GetSection("TokenConfigurations") //COnfiguração TokensConfigurations de appsettings.json
+                ).Configure(tokenConfigurations);
+
+            services.AddSingleton(tokenConfigurations);
+
+
             services.AddControllers();
 
             // Configura Swagger da API
