@@ -71,7 +71,10 @@ namespace Api.Service.Services
                 } 
 
             } else {
-                return null;
+                    return new {
+                        authenticate = false,
+                        message = "Falha ao autenticar"
+                    };
             }
         }
 

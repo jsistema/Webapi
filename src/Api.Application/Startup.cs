@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Api.CrossCutting.DependencyInjection;
 using Api.Domain.Secuity;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -39,6 +42,29 @@ namespace application
 
             services.AddSingleton(tokenConfigurations);
 
+            // adiciona a autenticação ao servico;
+            services.AddAuthentication(authOptions =>
+            {
+                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(beareOptions => 
+            {
+                var paramsValidation = beareOptions.TokenValidationParameters;
+                paramsValidation.IssuerSigningKey = sigingConfigurations.Key;
+                paramsValidation.ValidAudience = tokenConfigurations.Audience;
+                paramsValidation.ValidIssuer = tokenConfigurations.Issuer;
+                paramsValidation.ValidateIssuerSigningKey = true;
+                paramsValidation.ValidateLifetime = true;
+                paramsValidation.ClockSkew = TimeSpan.Zero;
+            });
+
+            //Adiciona a autorização ao servico.    
+            services.AddAuthorization(auth => {
+                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser().Build()
+                );
+            });
 
             services.AddControllers();
 
@@ -60,6 +86,31 @@ namespace application
                         Url = new Uri("http://www.jsistemas.com.br/registro")
                     }
                 });
+
+                //Adiciona botão authorize no Swagger;
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Entre com o Token JWT",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                //Informar ao swagger o comando de utilização do token passado no authorize.
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                  {   
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Id = "Bearer",
+                            Type = ReferenceType.SecurityScheme
+                        }
+                    }, new List<string>()
+                  }
+                });
+
             });
         }
 
