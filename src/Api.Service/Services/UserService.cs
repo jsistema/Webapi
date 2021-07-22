@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Api.Domain.Dtos.User;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces;
 using Api.Domain.Interfaces.Services.User;
+using Api.Domain.Models;
+using AutoMapper;
 
 namespace Api.Service.Services
 {
@@ -11,12 +14,14 @@ namespace Api.Service.Services
     {
         
         private IRepository<UserEntity> _repository;
+        private readonly IMapper _mapper;
 
-        public UserService(IRepository<UserEntity> repository)
+        public UserService(IRepository<UserEntity> repository, IMapper mapper)
         {
            //Passa para o local, a referencia ao repositório
            // Injeção de Dependência   
           _repository = repository;  
+          _mapper = mapper;
         }
 
         public async Task<bool> Delete(Guid id)
@@ -24,18 +29,23 @@ namespace Api.Service.Services
            return await _repository.DeleteAsync(id);
         }
 
-        public async Task<UserEntity> Get(Guid id)
+        public async Task<UserDto> Get(Guid id)
         {
-            return await _repository.SelectAsync(id);
+            var entity = await _repository.SelectAsync(id);
+            return _mapper.Map<UserDto>(entity);
         }
 
-        public async Task<IEnumerable<UserEntity>> GetAll()
+        public async Task<IEnumerable<UserDto>> GetAll()
         {
-            return await _repository.SelectAsync();
+            var listEntity = await _repository.SelectAsync();
+            return _mapper.Map<IEnumerable<UserDto>>(listEntity);
         }
 
-        public async Task<UserEntity> Post(UserEntity user)
+        public async Task<UserDtoCreateResult> Post(UserDto user)
         {
+
+          var model = _mapper.Map<UserModel>(user);  
+
            return await _repository.InsertAsync(user);  
         }
 
