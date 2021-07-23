@@ -41,17 +41,33 @@ namespace Api.Service.Services
             return _mapper.Map<IEnumerable<UserDto>>(listEntity);
         }
 
-        public async Task<UserDtoCreateResult> Post(UserDto user)
+        public async Task<UserDtoCreateResult> Post(UserDtoCreate user)
         {
 
-          var model = _mapper.Map<UserModel>(user);  
+          //Converte DTO para um Modelo   
+          var model = _mapper.Map<UserModel>(user); 
 
-           return await _repository.InsertAsync(user);  
+         //Converte o Modelo para uma Entidade
+          var entity = _mapper.Map<UserEntity>(model); 
+
+         //Insere no Banco, baseado na entidade com o EF   
+          var result = await _repository.InsertAsync(entity);
+
+         //Retornar o a entidade de resultado convertida para um UserDTOCreateResult;   
+          return _mapper.Map<UserDtoCreateResult>(result); 
+
         }
 
-        public async Task<UserEntity> Put(UserEntity user)
+        public async Task<UserDtoUpdateResult> Put(UserDtoUpdate user)
         {
-            return await _repository.UpdateAsync(user);
+
+            var model = _mapper.Map<UserModel>(user);
+
+            var entity = _mapper.Map<UserEntity>(model);
+
+            var result = await _repository.UpdateAsync(entity);
+
+            return _mapper.Map<UserDtoUpdateResult>(result);
         }
     }
 }

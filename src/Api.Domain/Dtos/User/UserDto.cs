@@ -1,16 +1,12 @@
-using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace Api.Domain.Dtos.User
 {
     public class UserDto
     {
-        [Required(ErrorMessage = "Nome é um campo obrigatório.")]
-        [StringLength(60, ErrorMessage ="O nome deve ter no máximo {1} caracteres")]
-        public string Nome { get; set; }
-
-        [Required(ErrorMessage ="O e-mail é um campo obrigatório para o login.")]
-        [EmailAddress(ErrorMessage = "O e-mail informado é inválido.")]
-        [StringLength(100, ErrorMessage ="O tamanho máximo do e-mail é inválido. Máximo {1} caracteres.")]
-        public string Email { get; set; }
+       public Guid Id { get; set; }
+       public string Nome { get; set; } 
+       public string Email { get; set; }
+       public DateTime CreateAt { get; set; }
     }
 }

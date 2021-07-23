@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using Api.CrossCutting.DependencyInjection;
+using Api.CrossCutting.Mappings;
 using Api.Domain.Secuity;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -29,6 +31,17 @@ namespace application
             // Configura injeção de dependência da camanda CrossCutting
             ConfigureService.ConfigureDependenciesService(services);
             ConfigureRepository.ConfigureDependenciesRepository(services);
+
+            //Configura os mapeamentos.
+            var config = new AutoMapper.MapperConfiguration(cfg => {
+               cfg.AddProfile(new DtoToModelProfile());  
+               cfg.AddProfile(new EntityToDtoProfile());
+               cfg.AddProfile(new ModelToEntityProfile());   
+            });
+
+            IMapper mapper = config.CreateMapper();
+            services.AddSingleton(mapper);
+
 
             //Configura injeção de dependencias para as classes JWT.
             var sigingConfigurations = new SigningConfiguration();

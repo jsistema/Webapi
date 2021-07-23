@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Api.Domain.Dtos.User;
 using Api.Domain.Entities;
 using Api.Domain.Interfaces.Services.User;
 using Api.Service.Services;
@@ -60,7 +61,7 @@ namespace Api.Application.Controllers
 
         [Authorize("Bearer")]
         [HttpPost]
-        public async Task<ActionResult> Post ([FromBody] UserEntity user)
+        public async Task<ActionResult> Post ([FromBody] UserDtoCreate user)
         {
           
            if (!ModelState.IsValid) 
@@ -76,7 +77,7 @@ namespace Api.Application.Controllers
                 if (result!=null) {
                     // O registro foi de fato gravado no banco, 
                     // Então retorna um Create StatusCod 201, e retorna o próprio objeto criado User no resul,
-                    return Created(new Uri(Url.Link("GetWithId", new {id = result.ID})), result);
+                    return Created(new Uri(Url.Link("GetWithId", new {id = result.Id})), result);
                 } else {
                     return BadRequest();
                 }
@@ -91,7 +92,7 @@ namespace Api.Application.Controllers
 
         [Authorize("Bearer")]
         [HttpPut]
-        public async Task<IActionResult> Put ([FromBody] UserEntity user) 
+        public async Task<IActionResult> Put ([FromBody] UserDtoUpdate user) 
         {
             //Verifica se o User está dentro dos padrões da entidade.    
             if (!ModelState.IsValid) {
