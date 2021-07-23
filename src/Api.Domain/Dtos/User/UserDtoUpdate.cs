@@ -10,7 +10,7 @@ namespace Api.Domain.Dtos.User
 
         [Required(ErrorMessage = "Nome é um campo obrigatório.")]
         [StringLength(60, ErrorMessage ="O nome deve ter no máximo {1} caracteres")]
-        public string Nome { get; set; }
+        public string Name { get; set; }
 
         [Required(ErrorMessage ="O e-mail é um campo obrigatório para o login.")]
         [EmailAddress(ErrorMessage = "O e-mail informado é inválido.")]
